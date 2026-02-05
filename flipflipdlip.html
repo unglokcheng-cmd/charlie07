@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>糖果翻牌記憶遊戲 - 對戰模式</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ffafcc, #ffc8dd, #cdb4db);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 90vh;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+        
+        h1 {
+            color: #ff5d8f;
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #ff5d8f, #ff97b7, #ffafcc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            color: #9d8189;
+            font-size: 1.1rem;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #ffafcc, #ffc8dd);
+            color: #5a3d5c;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            border: 3px solid #ff97b7;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .stat-box {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff5d8f;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #5a3d5c;
+            margin-top: 3px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 12px;
+        }
+        
+        button {
+            background-color: #ff97b7;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 8px rgba(255, 151, 183, 0.3);
+        }
+        
+        button:hover {
+            background-color: #ff5d8f;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(255, 93, 143, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        #resetBtn {
+            background-color: #ff8fab;
+            box-shadow: 0 4px 8px rgba(255, 143, 171, 0.3);
+        }
+        
+        #resetBtn:hover {
+            background-color: #ff477e;
+            box-shadow: 0 6px 12px rgba(255, 71, 126, 0.4);
+        }
+        
+        .game-board-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            min-height: 350px;
+        }
+        
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .card {
+            aspect-ratio: 3/4;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .card.matched .card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .card-front {
+            background: linear-gradient(145deg, #ffafcc, #ffc8dd);
+            color: white;
+            font-size: 2rem;
+            border: 3px solid #ff97b7;
+        }
+        
+        .card-back {
+            background: linear-gradient(145deg, #ff97b7, #ff5d8f);
+            color: white;
+            transform: rotateY(180deg);
+            font-size: 2.2rem;
+            border: 3px solid #ffafcc;
+        }
+        
+        .instructions {
+            background-color: #ffc8dd;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0;
+            border: 3px solid #ff97b7;
+        }
+        
+        .instructions h3 {
+            color: #5a3d5c;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .instructions p {
+            color: #5a3d5c;
+            line-height: 1.5;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .win-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .win-content {
+            background: linear-gradient(135deg, #ff5d8f, #ff97b7, #ffafcc);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            border: 5px solid #ffc8dd;
+        }
+        
+        .win-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .win-content p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .win-content button {
+            font-size: 1rem;
+            padding: 12px 25px;
+            margin: 15px auto 0;
+            background-color: #ff5d8f;
+        }
+        
+        .win-content button:hover {
+            background-color: #ff477e;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+                min-height: 85vh;
+            }
+            
+            .game-board {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+            
+            .card-front {
+                font-size: 1.5rem;
+            }
+            
+            .card-back {
+                font-size: 1.7rem;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                gap: 15px;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .controls {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            button {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .game-board {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+        
+        /* 添加滾動條樣式以防萬一 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #ffc8dd;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #ff97b7;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff5d8f;
+        }
+        
+        /* 糖果主題的圖標顏色 */
+        .fa-candy-cane, .fa-ice-cream, .fa-cookie-bite, .fa-cake-candles, 
+        .fa-lollipop, .fa-mug-hot, .fa-star, .fa-heart,
+        .fa-gem, .fa-crown, .fa-cloud, .fa-sun, .fa-moon, .fa-bell,
+        .fa-cookie, .fa-cupcake, .fa-donut, .fa-bread-slice {
+            color: #fff;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .score-info {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .score-box {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 8px 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-width: 100px;
+            border: 2px solid #ff97b7;
+        }
+        
+        .score-label {
+            font-size: 0.8rem;
+            color: #5a3d5c;
+            margin-bottom: 3px;
+        }
+        
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff5d8f;
+        }
+        
+        .multiplier-badge {
+            display: inline-block;
+            background-color: #ff5d8f;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* 對戰模式樣式 */
+        .players-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .player {
+            flex: 1;
+            background: linear-gradient(135deg, #ffafcc, #ffc8dd);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 3px solid #ff97b7;
+        }
+        
+        .player.active {
+            border-color: #ff0055;
+            box-shadow: 0 0 0 3px #ff97b7, 0 5px 15px rgba(255, 0, 85, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .player-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #5a3d5c;
+            margin-bottom: 8px;
+        }
+        
+        .player-score {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff5d8f;
+        }
+        
+        .player-turn {
+            font-size: 0.9rem;
+            color: #ff0055;
+            font-weight: bold;
+            margin-top: 5px;
+            height: 20px;
+        }
+        
+        .vs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff5d8f;
+        }
+        
+        .result-message {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 10px 0;
+            text-align: center;
+            color: #ff5d8f;
+            min-height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-candy-cane"></i> 糖果翻牌記憶遊戲 - 對戰模式</h1>
+            <p class="subtitle">兩名玩家輪流翻牌，找到匹配的糖果甜點，得分高者獲勝！</p>
+        </header>
+        
+        <div class="game-info">
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="moves">0</div>
+                    <div class="stat-label">總移動次數</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="matches">0</div>
+                    <div class="stat-label">總匹配對數</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="timer">90</div>
+                    <div class="stat-label">剩餘時間</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="startBtn">
+                    <i class="fas fa-play"></i> 開始遊戲
+                </button>
+                <button id="resetBtn">
+                    <i class="fas fa-redo"></i> 重新開始
+                </button>
+            </div>
+        </div>
+        
+        <div class="players-container">
+            <div class="player active" id="player1">
+                <div class="player-name">玩家 1</div>
+                <div class="player-score" id="player1Score">0</div>
+                <div class="player-turn" id="player1Turn">等待開始...</div>
+            </div>
+            
+            <div class="vs">VS</div>
+            
+            <div class="player" id="player2">
+                <div class="player-name">玩家 2</div>
+                <div class="player-score" id="player2Score">0</div>
+                <div class="player-turn" id="player2Turn"></div>
+            </div>
+        </div>
+        
+        <div class="result-message" id="resultMessage">
+            點擊"開始遊戲"按鈕開始對戰！
+        </div>
+        
+        <div class="game-board-container">
+            <div class="game-board" id="gameBoard">
+                <!-- 卡片將通過JavaScript動態生成 -->
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> 遊戲說明 - 對戰模式</h3>
+            <p>1. 點擊"開始遊戲"按鈕開始對戰</p>
+            <p>2. 兩名玩家輪流翻牌，每次翻兩張牌</p>
+            <p>3. 如果兩張牌圖案匹配，該玩家得分並繼續翻牌</p>
+            <p>4. 如果兩張牌不匹配，則輪到另一名玩家</p>
+            <p>5. <strong>連對得分機制</strong>: 連續匹配成功時得分翻倍！第1次得1分，第2次得4分，第3次得9分...</p>
+            <p>6. 在時間用完之前找到所有匹配的卡片對，得分高的玩家獲勝！</p>
+        </div>
+    </div>
+    
+    <div class="win-message" id="winMessage">
+        <div class="win-content">
+            <h2><i class="fas fa-trophy"></i> 遊戲結束！</h2>
+            <p id="winnerMessage"></p>
+            <p>總移動次數: <span id="finalMoves">0</span></p>
+            <p>總匹配對數: <span id="finalMatches">0</span></p>
+            <p>玩家 1 得分: <span id="finalScore1">0</span> 分</p>
+            <p>玩家 2 得分: <span id="finalScore2">0</span> 分</p>
+            <p>用時: <span id="finalTime">0</span> 秒</p>
+            <button id="playAgainBtn">
+                <i class="fas fa-play"></i> 再玩一次
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 遊戲配置 - 糖果甜點圖標
+            const config = {
+                totalPairs: 8, // 總共8對卡片，共16張
+                totalTime: 90, // 遊戲時間增加到90秒
+                // 確保有足夠多的糖果主題圖標，每個圖標都有對應的Font Awesome類
+                icons: [
+                    'fa-candy-cane',       // 糖果手杖
+                    'fa-ice-cream',        // 雪糕
+                    'fa-cookie-bite',      // 餅乾
+                    'fa-cake-candles',     // 蛋糕
+                    'fa-lollipop',         // 棒棒糖
+                    'fa-mug-hot',          // 熱巧克力
+                    'fa-star',             // 星星
+                    'fa-heart',            // 愛心
+                    'fa-gem',              // 寶石
+                    'fa-crown',            // 皇冠
+                    'fa-cloud',            // 雲朵
+                    'fa-sun',              // 太陽
+                    'fa-moon',             // 月亮
+                    'fa-bell',             // 鈴鐺
+                    'fa-cookie',           // 餅乾（另一種）
+                    'fa-bread-slice'       // 麵包片
+                ]
+            };
+            
+            // 遊戲狀態
+            const gameState = {
+                cards: [],
+                flippedCards: [],
+                matchedPairs: 0,
+                moves: 0,
+                gameStarted: false,
+                gameOver: false,
+                timer: config.totalTime,
+                timerInterval: null,
+                currentPlayer: 1, // 1或2
+                player1Score: 0,
+                player2Score: 0,
+                consecutiveMatches: 0,
+                multiplier: 1
+            };
+            
+            // DOM元素
+            const gameBoard = document.getElementById('gameBoard');
+            const movesElement = document.getElementById('moves');
+            const matchesElement = document.getElementById('matches');
+            const timerElement = document.getElementById('timer');
+            const startBtn = document.getElementById('startBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const winMessage = document.getElementById('winMessage');
+            const finalMovesElement = document.getElementById('finalMoves');
+            const finalMatchesElement = document.getElementById('finalMatches');
+            const finalTimeElement = document.getElementById('finalTime');
+            const playAgainBtn = document.getElementById('playAgainBtn');
+            const player1ScoreElement = document.getElementById('player1Score');
+            const player2ScoreElement = document.getElementById('player2Score');
+            const player1Element = document.getElementById('player1');
+            const player2Element = document.getElementById('player2');
+            const player1TurnElement = document.getElementById('player1Turn');
+            const player2TurnElement = document.getElementById('player2Turn');
+            const resultMessageElement = document.getElementById('resultMessage');
+            const winnerMessageElement = document.getElementById('winnerMessage');
+            const finalScore1Element = document.getElementById('finalScore1');
+            const finalScore2Element = document.getElementById('finalScore2');
+            
+            // 初始化遊戲
+            function initGame() {
+                console.log("初始化遊戲...");
+                gameState.cards = [];
+                gameState.flippedCards = [];
+                gameState.matchedPairs = 0;
+                gameState.moves = 0;
+                gameState.gameStarted = false;
+                gameState.gameOver = false;
+                gameState.timer = config.totalTime;
+                gameState.currentPlayer = 1;
+                gameState.player1Score = 0;
+                gameState.player2Score = 0;
+                gameState.consecutiveMatches = 0;
+                gameState.multiplier = 1;
+                
+                movesElement.textContent = gameState.moves;
+                matchesElement.textContent = gameState.matchedPairs;
+                timerElement.textContent = gameState.timer;
+                player1ScoreElement.textContent = gameState.player1Score;
+                player2ScoreElement.textContent = gameState.player2Score;
+                
+                clearInterval(gameState.timerInterval);
+                gameState.timerInterval = null;
+                
+                winMessage.style.display = 'none';
+                
+                // 設置玩家狀態
+                player1Element.classList.add('active');
+                player2Element.classList.remove('active');
+                player1TurnElement.textContent = '等待開始...';
+                player2TurnElement.textContent = '';
+                resultMessageElement.textContent = '點擊"開始遊戲"按鈕開始對戰！';
+                
+                createCards();
+                
+                // 重置按鈕狀態
+                startBtn.disabled = false;
+                startBtn.innerHTML = '<i class="fas fa-play"></i> 開始遊戲';
+                
+                console.log("遊戲初始化完成，卡片數量:", gameState.cards.length);
+            }
+            
+            // 創建卡片
+            function createCards() {
+                console.log("開始創建卡片...");
+                gameBoard.innerHTML = '';
+                
+                // 使用前8個圖標（確保有麵包圖標）
+                const selectedIcons = config.icons.slice(0, config.totalPairs);
+                
+                console.log("選中的圖標:", selectedIcons);
+                
+                // 創建卡片對
+                const cardIcons = [...selectedIcons, ...selectedIcons];
+                
+                // 隨機排序卡片
+                cardIcons.sort(() => 0.5 - Math.random());
+                
+                console.log("最終的卡片圖標順序:", cardIcons);
+                
+                // 生成卡片元素
+                cardIcons.forEach((icon, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.dataset.icon = icon;
+                    card.dataset.index = index;
+                    
+                    const cardInner = document.createElement('div');
+                    cardInner.className = 'card-inner';
+                    
+                    const cardFront = document.createElement('div');
+                    cardFront.className = 'card-front';
+                    cardFront.innerHTML = '<i class="fas fa-question"></i>';
+                    
+                    const cardBack = document.createElement('div');
+                    cardBack.className = 'card-back';
+                    
+                    // 確保圖標類名正確
+                    const iconClass = icon;
+                    cardBack.innerHTML = `<i class="fas ${iconClass}"></i>`;
+                    
+                    cardInner.appendChild(cardFront);
+                    cardInner.appendChild(cardBack);
+                    card.appendChild(cardInner);
+                    
+                    card.addEventListener('click', () => flipCard(card));
+                    
+                    gameBoard.appendChild(card);
+                    gameState.cards.push(card);
+                });
+                
+                console.log("卡片創建完成，DOM中的卡片數量:", document.querySelectorAll('.card').length);
+                
+                // 驗證所有圖標是否都正確顯示
+                setTimeout(() => {
+                    const icons = Array.from(document.querySelectorAll('.card-back i'));
+                    console.log("卡片背面圖標:", icons.map(el => el.className));
+                    
+                    const missingIcons = icons.filter(icon => {
+                        // 檢查圖標是否加載
+                        const iconClass = icon.className;
+                        // 簡單檢查：如果圖標的寬度為0，可能圖標無法顯示
+                        return icon.offsetWidth === 0;
+                    });
+                    
+                    if (missingIcons.length > 0) {
+                        console.warn("以下圖標可能無法顯示:", missingIcons.map(icon => icon.className));
+                        // 如果圖標無法顯示，使用文本替代
+                        missingIcons.forEach(icon => {
+                            const iconName = icon.className.replace('fas ', '');
+                            icon.parentElement.innerHTML = iconName.replace('fa-', '').charAt(0).toUpperCase();
+                        });
+                    } else {
+                        console.log("所有圖標都已正確加載!");
+                    }
+                }, 500);
+            }
+            
+            // 翻轉卡片
+            function flipCard(card) {
+                // 如果遊戲未開始、遊戲結束、卡片已匹配或已翻開，則忽略點擊
+                if (!gameState.gameStarted || gameState.gameOver || 
+                    card.classList.contains('matched') || 
+                    card.classList.contains('flipped') || 
+                    gameState.flippedCards.length >= 2) {
+                    return;
+                }
+                
+                // 如果這是第一張翻開的卡片，開始計時
+                if (gameState.moves === 0 && gameState.flippedCards.length === 0) {
+                    startTimer();
+                }
+                
+                // 翻轉卡片
+                card.classList.add('flipped');
+                gameState.flippedCards.push(card);
+                
+                // 如果翻開了兩張卡片，檢查是否匹配
+                if (gameState.flippedCards.length === 2) {
+                    gameState.moves++;
+                    movesElement.textContent = gameState.moves;
+                    
+                    const card1 = gameState.flippedCards[0];
+                    const card2 = gameState.flippedCards[1];
+                    
+                    // 檢查卡片是否匹配
+                    if (card1.dataset.icon === card2.dataset.icon) {
+                        // 匹配成功
+                        setTimeout(() => {
+                            card1.classList.add('matched');
+                            card2.classList.add('matched');
+                            gameState.flippedCards = [];
+                            
+                            gameState.matchedPairs++;
+                            matchesElement.textContent = gameState.matchedPairs;
+                            
+                            // 計算連對得分
+                            gameState.consecutiveMatches++;
+                            gameState.multiplier = gameState.consecutiveMatches; // 連對次數就是倍數
+                            const pointsEarned = gameState.consecutiveMatches * gameState.consecutiveMatches; // 得分為連對次數的平方
+                            
+                            // 給當前玩家加分
+                            if (gameState.currentPlayer === 1) {
+                                gameState.player1Score += pointsEarned;
+                                player1ScoreElement.textContent = gameState.player1Score;
+                                resultMessageElement.textContent = `玩家 1 匹配成功！獲得 ${pointsEarned} 分！繼續翻牌！`;
+                            } else {
+                                gameState.player2Score += pointsEarned;
+                                player2ScoreElement.textContent = gameState.player2Score;
+                                resultMessageElement.textContent = `玩家 2 匹配成功！獲得 ${pointsEarned} 分！繼續翻牌！`;
+                            }
+                            
+                            // 檢查是否獲勝
+                            if (gameState.matchedPairs === config.totalPairs) {
+                                winGame();
+                            }
+                        }, 500);
+                    } else {
+                        // 不匹配，翻回去並切換玩家
+                        setTimeout(() => {
+                            card1.classList.remove('flipped');
+                            card2.classList.remove('flipped');
+                            gameState.flippedCards = [];
+                            
+                            // 重置連對次數
+                            gameState.consecutiveMatches = 0;
+                            gameState.multiplier = 1;
+                            
+                            // 切換玩家
+                            switchPlayer();
+                        }, 1000);
+                    }
+                }
+            }
+            
+            // 切換玩家
+            function switchPlayer() {
+                if (gameState.currentPlayer === 1) {
+                    gameState.currentPlayer = 2;
+                    player1Element.classList.remove('active');
+                    player2Element.classList.add('active');
+                    player1TurnElement.textContent = '';
+                    player2TurnElement.textContent = '當前回合 ✓';
+                    resultMessageElement.textContent = '輪到玩家 2 翻牌！';
+                } else {
+                    gameState.currentPlayer = 1;
+                    player1Element.classList.add('active');
+                    player2Element.classList.remove('active');
+                    player1TurnElement.textContent = '當前回合 ✓';
+                    player2TurnElement.textContent = '';
+                    resultMessageElement.textContent = '輪到玩家 1 翻牌！';
+                }
+            }
+            
+            // 開始計時器
+            function startTimer() {
+                if (gameState.timerInterval) {
+                    clearInterval(gameState.timerInterval);
+                }
+                
+                gameState.timerInterval = setInterval(() => {
+                    gameState.timer--;
+                    timerElement.textContent = gameState.timer;
+                    
+                    // 時間到，遊戲結束
+                    if (gameState.timer <= 0) {
+                        clearInterval(gameState.timerInterval);
+                        gameState.gameOver = true;
+                        setTimeout(() => {
+                            winGame();
+                        }, 300);
+                    }
+                }, 1000);
+            }
+            
+            // 獲勝處理
+            function winGame() {
+                clearInterval(gameState.timerInterval);
+                gameState.gameOver = true;
+                
+                // 確定獲勝者
+                let winnerMessage = '';
+                if (gameState.player1Score > gameState.player2Score) {
+                    winnerMessage = '玩家 1 獲勝！🎉';
+                } else if (gameState.player2Score > gameState.player1Score) {
+                    winnerMessage = '玩家 2 獲勝！🎉';
+                } else {
+                    winnerMessage = '平局！雙方表現都很棒！';
+                }
+                
+                setTimeout(() => {
+                    finalMovesElement.textContent = gameState.moves;
+                    finalMatchesElement.textContent = gameState.matchedPairs;
+                    finalScore1Element.textContent = gameState.player1Score;
+                    finalScore2Element.textContent = gameState.player2Score;
+                    finalTimeElement.textContent = config.totalTime - gameState.timer;
+                    winnerMessageElement.textContent = winnerMessage;
+                    winMessage.style.display = 'flex';
+                }, 800);
+            }
+            
+            // 開始遊戲
+            function startGame() {
+                if (gameState.gameStarted) return;
+                
+                gameState.gameStarted = true;
+                startBtn.disabled = true;
+                startBtn.innerHTML = '<i class="fas fa-play"></i> 遊戲中...';
+                
+                // 設置玩家狀態
+                player1TurnElement.textContent = '當前回合 ✓';
+                resultMessageElement.textContent = '玩家 1 開始遊戲！';
+                
+                // 顯示所有卡片2.5秒鐘，然後翻回去
+                showAllCards();
+            }
+            
+            // 顯示所有卡片
+            function showAllCards() {
+                gameState.cards.forEach(card => {
+                    card.classList.add('flipped');
+                });
+                
+                setTimeout(() => {
+                    gameState.cards.forEach(card => {
+                        card.classList.remove('flipped');
+                    });
+                    // 遊戲正式開始
+                    resultMessageElement.textContent = '玩家 1 開始翻牌！';
+                }, 2500);
+            }
+            
+            // 事件監聽器
+            startBtn.addEventListener('click', startGame);
+            
+            resetBtn.addEventListener('click', () => {
+                initGame();
+            });
+            
+            playAgainBtn.addEventListener('click', () => {
+                winMessage.style.display = 'none';
+                initGame();
+            });
+            
+            // 初始化遊戲
+            initGame();
+        });
+    </script>
+</body>
+</html>

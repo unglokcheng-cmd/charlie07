@@ -211,6 +211,40 @@
             .mobile-controls {
                 display: block;
             }
+            
+            .back-to-home {
+                margin-top: 10px;
+            }
+            
+            .back-btn {
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Back button styling */
+        .back-to-home {
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            background-color: rgba(79, 195, 247, 0.2);
+            color: #4fc3f7;
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            border: 1px solid #4fc3f7;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background-color: #4fc3f7;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(79, 195, 247, 0.3);
         }
     </style>
 </head>
@@ -218,6 +252,11 @@
     <div class="game-container">
         <div class="game-header">
             <h1>太空射擊遊戲</h1>
+            <div class="back-to-home">
+                <a href="index.html" class="back-btn">
+                    ← 返回遊戲中心
+                </a>
+            </div>
         </div>
         
         <div class="game-info">

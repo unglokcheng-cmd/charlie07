@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Charlie's Game Center Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#27917f",
+                        "primary-dark": "#1e7062",
+                        "secondary": "#fdf7d5",
+                        "background-light": "#f9fbfb",
+                        "background-dark": "#131f1d",
+                        "text-main": "#101918",
+                        "text-muted": "#588d84",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col text-text-main dark:text-gray-100">
+<!-- Top Navigation Bar -->
+<header class="w-full border-b border-[#e9f1f0] dark:border-gray-800 bg-white dark:bg-[#1a2c29] px-6 py-4 sticky top-0 z-50">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<!-- Logo Section -->
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-10 rounded-lg bg-secondary text-primary">
+<span class="material-symbols-outlined text-2xl">stadia_controller</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-text-main dark:text-white hidden sm:block">Charlie's Game Center</h1>
+</div>
+<!-- User Profile Section -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-3 bg-secondary/50 dark:bg-gray-800 rounded-full pl-4 pr-1 py-1 border border-secondary dark:border-gray-700">
+<span class="text-sm font-bold text-primary dark:text-primary-light hidden md:block">charlie123456</span>
+<div class="size-8 rounded-full bg-cover bg-center border-2 border-primary" data-alt="User profile avatar of a smiling person" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDU3-Ch-4NzATq6ct7hXwCkbbmgb0xxiQ_1X49GwHz8IeLBsrzXI4-6MfxUx4I-aiofucRqjsWD6e4msiuViEfsQtSLbaRNmp-chb5WiedNADZi34vFb0lbNYGmNvPfjAfNuyahQ63tO72J7YdbqG0Opo1Hfht4UkE6wcTQsBNv7vZqARFSLlqfO2D87Ui_33jTcBxiFXbdgfruf7LYrLX2hA85SCOnJvT5Tkv_AL2tohL4zuMGWEQNnE74-c5IALz9jCktOnNmzCQ');">
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col items-center justify-center px-4 py-12 md:py-20">
+<div class="w-full max-w-5xl flex flex-col gap-12">
+<!-- Hero Text -->
+<div class="text-center space-y-4">
+<span class="inline-block px-3 py-1 text-xs font-bold tracking-wider uppercase text-primary bg-secondary rounded-full">New Arrivals</span>
+<h2 class="text-4xl md:text-5xl font-black tracking-tight text-text-main dark:text-white">
+                    Ready to Play?
+                </h2>
+<p class="text-text-muted dark:text-gray-400 max-w-2xl mx-auto text-lg">
+                    Select a game below to jump back into the action. Your high scores are waiting.
+                </p>
+</div>
+<!-- Game Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+<!-- Game Card 1: biubiubiu -->
+<div class="group relative flex flex-col overflow-hidden rounded-xl bg-white dark:bg-[#1a2c29] border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1">
+<!-- Image -->
+<div class="relative w-full aspect-video overflow-hidden bg-gray-100 dark:bg-gray-900">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Futuristic sci-fi neon city landscape with cyber aesthetics" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA9r_s3jlDy6J8c7EshFhfCo0FWgMxqSzab57-jmQhTOTlLkw99UniopdyFru0AizqlY0PzVaAXDCo0ZkqNxK3exPZzd76l8d8w-BPRV_MfsFJMGrT24P0-5PTwhw7MoNGZenVfk0pujl90_F5fZoOFqiVFMaaCxbCXOIG8IOcL-qLjxqnQgyW-tTFsp8QoDk850EP9WJex59RPQGr75ElCWkXYrE6PLbKo6iDOd7dF-u7CbEfiVNK3edzUl4PdeBWHzsLegQGwENo');">
+</div>
+<div class="absolute top-4 right-4 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">rocket_launch</span> Sci-Fi
+                        </div>
+</div>
+<!-- Content -->
+<div class="flex flex-col flex-grow p-6 md:p-8">
+<div class="mb-4">
+<h3 class="text-2xl font-bold text-text-main dark:text-white mb-2 group-hover:text-primary transition-colors">biubiubiu</h3>
+<p class="text-text-muted dark:text-gray-400 text-sm leading-relaxed">
+                                Dive into a futuristic shooting game with a stunning sci-fi aesthetic. Defend the galaxy from neon invaders.
+                            </p>
+</div>
+<div class="mt-auto pt-4 flex items-center justify-between">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white dark:border-[#1a2c29] bg-gray-200 bg-cover" data-alt="Friend avatar 1" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAbPwVKSV1EQ1wOQiS7mfSKml7wqrbHI7gTricewH41H_ET0EdG4861xIOn3nXfoLqkdK2TUB9Kpa8rD8Zkv4jOnsOFjgVi6Z2fgQJcqqLL9iGTQWv9NkNkdEco-Z48HyM74kWNWMJEy9aWxk_b7RJ9ucaMPKwKaMPgfb6SUXrFY7vvPnJwiLC6OfguKiO6H2UZpS0ydpVTog01YV-XCALjgm0Db-IK3mf2MxfYSwjzxjD_uvLyV5FmtWrjD38cLbmuVgTwxjF47-U')"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white dark:border-[#1a2c29] bg-gray-200 bg-cover" data-alt="Friend avatar 2" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDnV4i5APJgNTleiBU6vt28Em7gM58HLxHlqGS7LgOZeAv2hKDeF1U9n8I_Qg7jMPti3lHTlE4f16joCWHpryWGFjtSIptLfFyEy1z7M60_copG50adx9DtWylfZLhLmUh6sD3s-peLUuUDQNbE-wSrVHdpu7k4UqlQ0sWwNYKzPuK2XbH5CfsxcjKobvMV5RmagYNlGfeBNNcjimfZRpelz4LYetYvVpF4nZuIxjT3ZCdOewRynPZtNlB0DvRbm4qRD9GDDnkdKcc')"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white dark:border-[#1a2c29] bg-secondary flex items-center justify-center text-[10px] font-bold text-primary">+12</div>
+</div>
+<button class="bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-lg font-bold text-sm transition-colors flex items-center gap-2 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-lg">play_arrow</span>
+                                Start
+                            </button>
+</div>
+</div>
+</div>
+<!-- Game Card 2: flipflipflip -->
+<div class="group relative flex flex-col overflow-hidden rounded-xl bg-secondary/30 dark:bg-[#1a2c29] border border-secondary dark:border-gray-800 shadow-sm hover:shadow-xl hover:shadow-yellow-500/10 transition-all duration-300 transform hover:-translate-y-1">
+<!-- Image -->
+<div class="relative w-full aspect-video overflow-hidden bg-gray-100 dark:bg-gray-900">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Cute colorful Japanese toys and mascots on pastel background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC0Of7Xj3YSqmwqs6DK9n264WbzhglHNHdy2xWlxDCjT24-wIkHXpoIQU8JVbOcX924zObbkBq6TDI_WQ8LDN3CepZl6JZYTB0QirEul8zuauP2-46Z1hi8_-S3TE1j29icqxwHt_po-HjdcZjukZeo96c8S43roTUR-DQAGkTMiPDURnxeJrqiTJrjzROD-GaCIx1hQNpyYAeoykGLIzu_fywvvmSj5HQP58Gel8MzOCdlNAPerGHKVlb0IR4Ug3zjFCvibZ8Kh-A');">
+</div>
+<div class="absolute top-4 right-4 bg-white/80 dark:bg-black/60 backdrop-blur-md text-primary px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-sm">pets</span> Kids
+                        </div>
+</div>
+<!-- Content -->
+<div class="flex flex-col flex-grow p-6 md:p-8 bg-secondary/20 dark:bg-transparent">
+<div class="mb-4">
+<h3 class="text-2xl font-bold text-text-main dark:text-white mb-2 group-hover:text-primary transition-colors">flipflipflip</h3>
+<p class="text-text-muted dark:text-gray-400 text-sm leading-relaxed">
+                                A cute Japanese-style matching game for kids. Find the pairs and unlock adorable mascot characters!
+                            </p>
+</div>
+<div class="mt-auto pt-4 flex items-center justify-between">
+<div class="flex items-center gap-1 text-xs font-medium text-text-muted dark:text-gray-500">
+<span class="material-symbols-outlined text-base">star</span> 4.9 Rating
+                            </div>
+<button class="bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-lg font-bold text-sm transition-colors flex items-center gap-2 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-lg">play_arrow</span>
+                                Start
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-white dark:bg-[#1a2c29] border-t border-[#e9f1f0] dark:border-gray-800 py-8 mt-auto">
+<div class="max-w-7xl mx-auto px-6 flex flex-col items-center gap-4">
+<div class="flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity cursor-default">
+<span class="material-symbols-outlined text-primary">terminal</span>
+<p class="text-text-muted dark:text-gray-500 font-mono text-sm">n00neh3r3charlie</p>
+</div>
+<p class="text-xs text-gray-400 dark:text-gray-600">© 2024 Charlie's Game Center. All rights reserved.</p>
+</div>
+</footer>
+</body></html>
